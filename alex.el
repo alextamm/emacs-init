@@ -1,4 +1,5 @@
 (add-to-list 'load-path "~/bin/emacs-plugins")
+(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 
 ;; we want the latest and greates cperl-mode
 ;;(load-file "~/bin/emacs-plugins/cperl-mode.el")
@@ -7,11 +8,10 @@
 (if (string= 'nil window-system)
     (setq linum-format "%2d:") (setq linum-format "%2d"))
 
+(require 'code-mode)
 (require 'yasnippet) ;; not yasnippet-bundle
-(yas/initialize)
-(setq yas/root-directory "~/.emacs.d/yasnippet-snippets")
-(yas/load-directory yas/root-directory)
-;;(setq linum-format "%d:")
+(yas/global-mode 1)
+
 (defun duplicate-line()
   (interactive)
   (move-beginning-of-line 1)
