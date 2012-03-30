@@ -12,6 +12,9 @@
 (require 'yasnippet) ;; not yasnippet-bundle
 (yas/global-mode 1)
 
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+
 (defun duplicate-line()
   (interactive)
   (move-beginning-of-line 1)
