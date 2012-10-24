@@ -168,7 +168,7 @@
 (global-set-key (kbd "C-M-g") 'cua-toggle-global-mark)
 (global-set-key (kbd "C-x r w") 'copy-rectangle)
 (global-set-key [f5] 'call-last-kbd-macro)
+(global-set-key [f1] 'find-file)
 (global-set-key [S-f1] 'cperl-mode)
-(global-set-key [S-f2] 'cperl-mode)
 (global-set-key [home] 'My-smart-home)
 ;;(global-set-key [S-f4] 'alex-unhighlight)
