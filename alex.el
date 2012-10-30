@@ -32,6 +32,43 @@
 
 (set 'alex-hilited nil)
 
+(defun alex-append (start end)
+  (interactive "r")
+  (if (and transient-mark-mode mark-active)
+      (let ((to-append (read-from-minibuffer "Append what: ")))
+        (save-excursion
+          (progn
+            (goto-char end)
+            (end-of-line)
+            (if (> (point) end)
+                (progn
+                  (setq last-line (- (line-number-at-pos) 1))
+                  (setq at-the-end nil)
+                  )
+              (progn
+                ;; we are at the end of the region
+                (setq last-line (line-number-at-pos))
+                (setq at-the-end t)
+                )
+              )
+            (goto-char start)
+            (setq stop-here nil)
+            (while (and (not stop-here)
+                        (<= (line-number-at-pos) last-line))
+              (end-of-line)
+              (insert to-append)
+              (if (eobp) (setq stop-here t) (next-line))
+              )
+            ) ;; progn
+          ) ;; save-excursion
+        (if at-the-end
+            (end-of-line))
+        ;;(message start)
+        )
+    (progn (message "No region selected") )
+    )
+  )
+
 (defun alex-highlight ()
   (interactive)
   (let ((tohilight (read-from-minibuffer "Highlight string: ")))
@@ -74,6 +111,58 @@
     )
   )
 
+;; (defun cua-resize-rectangle-right (n)
+;;     "Resize rectangle to the right."
+;;     (interactive "p")
+;;     (let ((resized (> n 0)))
+;;       (while (> n 0)
+;;         (setq n (1- n))
+;;         (cond
+;;          ((cua--rectangle-right-side)
+;;           (cua--rectangle-right (1+ (cua--rectangle-right)))
+;;           (move-to-column (cua--rectangle-right)))
+;;          (t
+;;           (cua--rectangle-left (1+ (cua--rectangle-left)))
+;;           (move-to-column (cua--rectangle-right)))))
+;;       (if resized
+;;           (cua--rectangle-resized))
+;;       )
+;;     (if (= (current-column) (cua--rectangle-right))
+;;         (move-to-column (+ (cua--rectangle-right) 1))
+;;       )
+;;     )
+
+;; (defun cua-resize-rectangle-left (n)
+;;     "Resize rectangle to the left."
+;;     (interactive "p")
+;;     (let (resized)
+;;       (while (> n 0)
+;;         (setq n (1- n))
+;;         (if (or (= (cua--rectangle-right) 0)
+;;                 (and (not (cua--rectangle-right-side))
+;;                      (= (cua--rectangle-left) 0)))
+;;             (setq n 0)
+;;           (cond
+;;            ((cua--rectangle-right-side)
+;;             (cua--rectangle-right (1- (cua--rectangle-right)))
+;;             (move-to-column (cua--rectangle-right)))
+;;            (t
+;;             (cua--rectangle-left (1- (cua--rectangle-left)))
+;;             (move-to-column (cua--rectangle-right))))
+;;           (setq resized t)))
+;;       (if resized
+;;           (cua--rectangle-resized)))
+;;     (if (= (current-column) (cua--rectangle-right))
+;;         (move-to-column (+ (cua--rectangle-right) 1))
+;;       )
+;;     )
+
+
+;; This we need to do sometime...
+;; (defun alex-delete-last-char ()
+;;   "Delete the last char in the rectangle"
+;;   (interactive)
+;; )  
 
 (defun normaltabs()
   (interactive)
@@ -156,14 +245,23 @@
 	  )
 
 (add-hook 'ruby-mode-hook (lambda() (alex-programming)))
-(add-hook 'emacs-lisp-mode-hook (lambda() (alex-programming)))
+
+(defun mylisp () 
+  (alex-programming)
+  (global-set-key [f12] 'eval-last-sexp)
+  (yas/minor-mode -1)
+  (yas/global-mode -1)
+)
+(add-hook 'lisp-mode-hook (lambda() (mylisp)))
+(add-hook 'lisp-interaction-mode-hook (lambda() (mylisp)))
+(add-hook 'emacs-lisp-mode-hook (lambda() (mylisp)))
 
 ;; Key bindings
 ;; (global-set-key (quote [S-backspace]) (quote kill-whole-line))
 (global-set-key (quote [delete]) (quote delete-char))
 (global-set-key (quote [S-delete]) (quote kill-whole-line))
 (global-set-key (kbd "C-d") 'duplicate-line)
-(global-set-key (kbd "C-b") 'cua-set-rectangle-mark)
+(global-set-key (kbd "C-b") 'alex-cua-mods)
 (global-set-key (kbd "C-n") 'linum-mode)
 (global-set-key (kbd "C-M-g") 'cua-toggle-global-mark)
 (global-set-key (kbd "C-x r w") 'copy-rectangle)
@@ -172,3 +270,35 @@
 (global-set-key [S-f1] 'cperl-mode)
 (global-set-key [home] 'My-smart-home)
 ;;(global-set-key [S-f4] 'alex-unhighlight)
+(global-set-key [f11] 'alex-append)
+
+;; Now we have to do some magic
+;; since cua-set-rectangle-mark calls
+;; cua--init-rectangles, and this screws up my defuns,
+;; we have to make sure my defuns are in place
+
+(defun alex-cua-mods ()
+  (interactive)
+  (cua-set-rectangle-mark)
+  (defun cua-insert-char-rectangle (&optional ch)
+    (interactive)
+    (if buffer-read-only
+        (ding)
+      (cua--indent-rectangle (or ch (aref (this-single-command-keys) 0)))
+      (if (and (= (current-column) (cua--rectangle-right))
+               (not (= (cua--rectangle-left) (cua--rectangle-right))))
+          (cua-resize-rectangle-right 1))
+      (cua--keep-active))
+    t)
+  (defun cua--rectangle-resized ()
+    ;; Refresh state after resizing rectangle
+    (setq cua--buffer-and-point-before-command nil)
+    (cua--rectangle-insert-col 0)
+    (cua--rectangle-set-corners)
+    (cua--keep-active)
+    (if (= (current-column) (cua--rectangle-right))
+        (move-to-column (+ (cua--rectangle-right) 1))
+      )
+    )
+  (global-set-key (kbd "C-b") 'cua-set-rectangle-mark)
+  )
