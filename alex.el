@@ -111,6 +111,25 @@
     )
   )
 
+(defun show-password()
+  (interactive)
+  (let (pwstart pwend)
+    (search-backward "-----BEGIN PGP MESSAGE-----")
+    (cua-set-mark)
+    (search-forward "-----END PGP MESSAGE-----")
+    (setq pwstart (region-beginning) pwend (region-end))
+    (let ((context (epg-make-context 'OpenPGP)))
+      (let (message-log-max)
+        (setq message-log-max nil)
+        (message (decode-coding-string
+                  (epg-decrypt-string context (buffer-substring pwstart pwend))
+                  'utf-8)
+                 )
+        )
+      )
+    )
+  )
+
 ;; (defun cua-resize-rectangle-right (n)
 ;;     "Resize rectangle to the right."
 ;;     (interactive "p")
@@ -304,3 +323,6 @@
   )
 (setq mouse-yank-at-point t)
 (setq mouse-autoselect-window t)
+(require 'epa-file)
+(epa-file-enable)
+(setq epg-gpg-program "/usr/bin/gpg")
