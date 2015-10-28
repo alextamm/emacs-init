@@ -302,3 +302,5 @@
     )
   (global-set-key (kbd "C-b") 'cua-set-rectangle-mark)
   )
+(setq mouse-yank-at-point t)
+(setq mouse-autoselect-window t)
