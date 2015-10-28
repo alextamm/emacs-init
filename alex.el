@@ -1,5 +1,5 @@
 (add-to-list 'load-path "~/bin/emacs-plugins")
-(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
+;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 
 ;; we want the latest and greates cperl-mode
 ;;(load-file "~/bin/emacs-plugins/cperl-mode.el")
