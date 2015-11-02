@@ -8,6 +8,7 @@
 (if (string= 'nil window-system)
     (setq linum-format "%2d:") (setq linum-format "%2d"))
 
+(require 'expand-region)
 (require 'code-mode)
 (require 'yasnippet) ;; not yasnippet-bundle
 (yas/global-mode 1)
@@ -281,13 +282,15 @@
 (global-set-key (quote [S-delete]) (quote kill-whole-line))
 (global-set-key (kbd "C-d") 'duplicate-line)
 (global-set-key (kbd "C-b") 'alex-cua-mods)
-(global-set-key (kbd "C-n") 'linum-mode)
+(global-set-key (kbd "M-n") 'linum-mode)
 (global-set-key (kbd "C-M-g") 'cua-toggle-global-mark)
 (global-set-key (kbd "C-x r w") 'copy-rectangle)
 (global-set-key [f5] 'call-last-kbd-macro)
 (global-set-key [f1] 'find-file)
 (global-set-key [S-f1] 'cperl-mode)
 (global-set-key [home] 'My-smart-home)
+(global-set-key (kbd "C-]") 'er/expand-region)
+
 ;;(global-set-key [S-f4] 'alex-unhighlight)
 (global-set-key [f11] 'alex-append)
 
