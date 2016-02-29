@@ -5,7 +5,7 @@
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize) ;; You might already have this line
+(package-initialize)
 
 (require 'multiple-cursors)
 (require 'auto-complete)
@@ -17,21 +17,21 @@
 (setq inhibit-splash-screen 1)
 (setq inhibit-startup-echo-area-message "alex")
 (setq transient-mark-mode t)
+(setq display-time-24hr-format t)
+(setq display-time-interval 4)
+(setq display-time-mode t)
 
-(column-number-mode 1)
-(line-number-mode 1)
-
-;; (define-key global-map "\e[1;2P" [S-f1])
-;; (define-key function-key-map "\e[1;2Q" [S-f2])
-;; (define-key function-key-map "\e[1;2R" [S-f3])
-;; (define-key function-key-map "\e[1;2S" [S-f4])
-
+(show-paren-mode t)
+(column-number-mode t)
+(line-number-mode t)
+(auto-complete-mode t)
 
 ;; No menu in terminal
 (cond ((string= 'nil window-system)
        (menu-bar-mode 0)
        ))
 (set-scroll-bar-mode 'right)
+(global-font-lock-mode t)
 
 ;; This is for editing blocks and things:
 (cua-selection-mode t)
