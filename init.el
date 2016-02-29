@@ -92,27 +92,6 @@
             )
           )
 
-;; A function for regular search and replace-tasks
-;; If you need to bind to a key, for example.
-;; Template for replacing tabs to eight spaces and vice versa
-;; Made by Fingis at Frantic
-;; (defun schwartz ()
-;;   (interactive)
-;;   (if (and transient-mark-mode
-;;            mark-active)
-;;       (save-excursion
-;; 	(save-restriction
-;; 	  (narrow-to-region (region-beginning) (region-end))
-;; 	  (goto-char (point-min))
-;; 	  (replace-string "foo" "bar")
-;; 	  )
-;; 	)
-;;     (save-excursion
-;;       (goto-char (point-min))
-;;       (replace-string "foo" "BAR")
-;;       )
-;;     )
-;;   )
 
 (defun forward-paren ()
   (interactive)
