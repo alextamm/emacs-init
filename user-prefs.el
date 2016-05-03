@@ -68,7 +68,7 @@
 
 (require 'expand-region)
 (require 'code-mode)
-(require 'yasnippet) ;; not yasnippet-bundle
+(require 'yasnippet)
 (yas/global-mode 1)
 
 (require 'uniquify)
@@ -189,59 +189,6 @@
     )
   )
 
-;; (defun cua-resize-rectangle-right (n)
-;;     "Resize rectangle to the right."
-;;     (interactive "p")
-;;     (let ((resized (> n 0)))
-;;       (while (> n 0)
-;;         (setq n (1- n))
-;;         (cond
-;;          ((cua--rectangle-right-side)
-;;           (cua--rectangle-right (1+ (cua--rectangle-right)))
-;;           (move-to-column (cua--rectangle-right)))
-;;          (t
-;;           (cua--rectangle-left (1+ (cua--rectangle-left)))
-;;           (move-to-column (cua--rectangle-right)))))
-;;       (if resized
-;;           (cua--rectangle-resized))
-;;       )
-;;     (if (= (current-column) (cua--rectangle-right))
-;;         (move-to-column (+ (cua--rectangle-right) 1))
-;;       )
-;;     )
-
-;; (defun cua-resize-rectangle-left (n)
-;;     "Resize rectangle to the left."
-;;     (interactive "p")
-;;     (let (resized)
-;;       (while (> n 0)
-;;         (setq n (1- n))
-;;         (if (or (= (cua--rectangle-right) 0)
-;;                 (and (not (cua--rectangle-right-side))
-;;                      (= (cua--rectangle-left) 0)))
-;;             (setq n 0)
-;;           (cond
-;;            ((cua--rectangle-right-side)
-;;             (cua--rectangle-right (1- (cua--rectangle-right)))
-;;             (move-to-column (cua--rectangle-right)))
-;;            (t
-;;             (cua--rectangle-left (1- (cua--rectangle-left)))
-;;             (move-to-column (cua--rectangle-right))))
-;;           (setq resized t)))
-;;       (if resized
-;;           (cua--rectangle-resized)))
-;;     (if (= (current-column) (cua--rectangle-right))
-;;         (move-to-column (+ (cua--rectangle-right) 1))
-;;       )
-;;     )
-
-
-;; This we need to do sometime...
-;; (defun alex-delete-last-char ()
-;;   "Delete the last char in the rectangle"
-;;   (interactive)
-;; )  
-
 (defun normaltabs()
   (interactive)
   (global-set-key (kbd "TAB") 'self-insert-command)
@@ -334,23 +281,6 @@
 (add-hook 'lisp-interaction-mode-hook (lambda() (mylisp)))
 (add-hook 'emacs-lisp-mode-hook (lambda() (mylisp)))
 
-;; Key bindings
-;; (global-set-key (quote [S-backspace]) (quote kill-whole-line))
-(global-set-key (quote [delete]) (quote delete-char))
-(global-set-key (quote [S-delete]) (quote kill-whole-line))
-(global-set-key (kbd "C-d") 'duplicate-line)
-(global-set-key (kbd "C-b") 'alex-cua-mods)
-(global-set-key (kbd "M-n") 'linum-mode)
-(global-set-key (kbd "C-M-g") 'cua-toggle-global-mark)
-(global-set-key (kbd "C-x r w") 'copy-rectangle)
-(global-set-key [f5] 'call-last-kbd-macro)
-(global-set-key [f1] 'find-file)
-(global-set-key [S-f1] 'cperl-mode)
-(global-set-key [home] 'My-smart-home)
-(global-set-key (kbd "C-]") 'er/expand-region)
-
-;;(global-set-key [S-f4] 'alex-unhighlight)
-(global-set-key [f11] 'alex-append)
 
 ;; Now we have to do some magic
 ;; since cua-set-rectangle-mark calls
@@ -382,6 +312,7 @@
     )
   (global-set-key (kbd "C-b") 'cua-set-rectangle-mark)
   )
+
 (setq mouse-yank-at-point t)
 (setq mouse-autoselect-window t)
 (require 'epa-file)
@@ -482,12 +413,8 @@ Including indent-buffer, which should not be called automatically on save."
 					 )
       )
 
-;;(global-set-key (kbd "<return>") (kbd "<return>"))
-(global-set-key "\C-n" 'forward-paren)
-(global-set-key "\C-p" 'backward-paren)
 
 (fset 'yes-or-no-p 'y-or-n-p)
-
 
 (defun My-smart-home () "Odd home to beginning of line, even home to beginning of text/code."
   (interactive)
@@ -505,3 +432,16 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "S-<delete>") 'kill-whole-line)
 (global-set-key [S-f1] 'cperl-mode)
 (global-set-key [f1] 'find-file)
+(global-set-key (quote [delete]) (quote delete-char))
+(global-set-key (quote [S-delete]) (quote kill-whole-line))
+(global-set-key (kbd "C-d") 'duplicate-line)
+(global-set-key (kbd "C-b") 'alex-cua-mods)
+(global-set-key (kbd "M-n") 'linum-mode)
+(global-set-key (kbd "C-M-g") 'cua-toggle-global-mark)
+(global-set-key (kbd "C-x r w") 'copy-rectangle)
+(global-set-key [f5] 'call-last-kbd-macro)
+(global-set-key (kbd "C-]") 'er/expand-region)
+;;(global-set-key [S-f4] 'alex-unhighlight)
+(global-set-key [f11] 'alex-append)
+(global-set-key "\C-n" 'forward-paren)
+(global-set-key "\C-p" 'backward-paren)
