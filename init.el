@@ -1,6 +1,6 @@
 (require 'package)
 (add-to-list 'package-archives
-	     '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
@@ -14,8 +14,13 @@
 (set-keyboard-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
+;; Tried several ways to disable the stupid blah blah info about GNU blah blah message
+;; This method isn't portable between users:
+;; (setq inhibit-startup-echo-area-message "user-name")
+;; ... but emacs lisp lets me defun it empty:
+(defun display-startup-echo-area-message ())
+
 (setq inhibit-splash-screen 1)
-(setq inhibit-startup-echo-area-message "alex")
 (setq transient-mark-mode t)
 (setq display-time-24hr-format t)
 (setq display-time-interval 4)
@@ -32,6 +37,17 @@
        ))
 (set-scroll-bar-mode 'right)
 (global-font-lock-mode t)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(when window-system
+  (menu-bar-mode 1)
+  (set-scroll-bar-mode 'right)
+  (setq scroll-bar-mode-explicit t)
+  )
+
+(require 'tramp)
+(setq tramp-default-method "ssh")
 
 ;; This is for editing blocks and things:
 (cua-selection-mode t)
